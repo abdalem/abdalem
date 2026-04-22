@@ -50,6 +50,13 @@ interface BlockData {
   zIndex?: number
 }
 
+const resolveAssetUrl = (url?: string) => {
+  if (!url) return undefined
+  if (/^(https?:)?\/\//.test(url) || url.startsWith('data:')) return url
+  if (url.startsWith('/')) return `${import.meta.env.BASE_URL}${url.slice(1)}`
+  return url
+}
+
 
 // Social platforms config
 const SOCIAL_PLATFORMS: Record<string, { icon: IconType | LucideIcon; brandColor: string; buildUrl: (h: string) => string }> = {
@@ -196,7 +203,8 @@ const Block = ({ block }: { block: BlockData }) => {
   const activeVideoId = block.youtubeVideoId || videos[0]?.id
   const isRichYT = isYoutube && activeVideoId && block.youtubeMode !== 'grid' && block.youtubeMode !== 'list'
   const isYTGrid = isYoutube && (block.youtubeMode === 'grid' || block.youtubeMode === 'list')
-  const isLinkImg = block.type === BlockType.LINK && block.imageUrl
+  const resolvedImageUrl = resolveAssetUrl(block.imageUrl)
+  const isLinkImg = block.type === BlockType.LINK && resolvedImageUrl
 
   if (block.type === BlockType.SPACER) return <div style={{ borderRadius, ...gridStyle }} className="h-full" />
 
@@ -246,7 +254,7 @@ const Block = ({ block }: { block: BlockData }) => {
 
   let bgStyle: React.CSSProperties = block.customBackground ? { background: block.customBackground } : {}
   if (isRichYT) bgStyle = { backgroundImage: `url(https://img.youtube.com/vi/${activeVideoId}/maxresdefault.jpg)`, backgroundSize: 'cover', backgroundPosition: 'center' }
-  else if (isLinkImg && block.imageUrl) bgStyle = { backgroundImage: `url(${block.imageUrl})`, backgroundSize: 'cover', backgroundPosition: `${mediaPos.x}% ${mediaPos.y}%` }
+  else if (isLinkImg && resolvedImageUrl) bgStyle = { backgroundImage: `url(${resolvedImageUrl})`, backgroundSize: 'cover', backgroundPosition: `${mediaPos.x}% ${mediaPos.y}%` }
 
   return (
     <div onClick={handleClick} style={{ ...gridStyle }} className="cursor-pointer h-full transform-gpu">
@@ -259,12 +267,12 @@ const Block = ({ block }: { block: BlockData }) => {
           <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-0" />
         )}
         <div className="w-full h-full relative z-10">
-          {block.type === BlockType.MEDIA && block.imageUrl ? (
+          {block.type === BlockType.MEDIA && resolvedImageUrl ? (
             <div className="w-full h-full relative overflow-hidden">
-              {/\.(mp4|webm|ogg|mov)$/i.test(block.imageUrl) ? (
-                <video src={block.imageUrl} className="full-img" style={{ objectPosition: `${mediaPos.x}% ${mediaPos.y}%` }} autoPlay loop muted playsInline />
+              {/\.(mp4|webm|ogg|mov)$/i.test(resolvedImageUrl) ? (
+                <video src={resolvedImageUrl} className="full-img" style={{ objectPosition: `${mediaPos.x}% ${mediaPos.y}%` }} autoPlay loop muted playsInline />
               ) : (
-                <img src={block.imageUrl} alt={block.title || ''} className="full-img" style={{ objectPosition: `${mediaPos.x}% ${mediaPos.y}%` }} />
+                <img src={resolvedImageUrl} alt={block.title || ''} className="full-img" style={{ objectPosition: `${mediaPos.x}% ${mediaPos.y}%` }} />
               )}
               {block.title && <div className="media-overlay"><p className="media-title text-sm">{block.title}</p>{block.subtext && <p className="media-subtext">{block.subtext}</p>}</div>}
             </div>
@@ -392,6 +400,7 @@ export default function App() {
 
   const avatarStyle = { borderRadius: '1.5rem', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.15)', border: '4px solid #ffffff' }
   const bgStyle: React.CSSProperties = { backgroundColor: '#f8fafc' }
+  const avatarUrl = resolveAssetUrl(profile.avatarUrl)
 
   return (
     <div className="min-h-screen font-sans" style={bgStyle}>
@@ -402,7 +411,7 @@ export default function App() {
         <div className="hidden lg:flex">
           <div className="fixed left-0 top-0 w-[420px] h-screen flex flex-col justify-center items-start px-12">
             <div className="w-40 h-40 overflow-hidden bg-gray-100 mb-8" style={avatarStyle}>
-              <img src={profile.avatarUrl} alt={profile.name} className="w-full h-full object-cover" />
+              <img src={avatarUrl} alt={profile.name} className="w-full h-full object-cover" />
             </div>
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 mb-3">{profile.name}</h1>
             <p className="text-base text-gray-500 font-medium whitespace-pre-wrap max-w-xs">{profile.bio}</p>
@@ -420,7 +429,7 @@ export default function App() {
         <div className="lg:hidden">
           <div className="p-4 pt-8 flex flex-col items-center text-center">
             <div className="w-24 h-24 mb-4 overflow-hidden bg-gray-100" style={avatarStyle}>
-              <img src={profile.avatarUrl} alt={profile.name} className="w-full h-full object-cover" />
+              <img src={avatarUrl} alt={profile.name} className="w-full h-full object-cover" />
             </div>
             <h1 className="text-2xl font-extrabold tracking-tight text-gray-900 mb-2">{profile.name}</h1>
             <p className="text-sm text-gray-500 font-medium whitespace-pre-wrap max-w-xs">{profile.bio}</p>
