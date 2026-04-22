@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Youtube, Play, Loader2 } from 'lucide-react'
 import {
-  SiX, SiInstagram, SiTiktok, SiYoutube, SiGithub, SiGitlab, SiLinkedin,
+  SiX, SiInstagram, SiTiktok, SiYoutube, SiGithub, SiGitlab,
   SiFacebook, SiTwitch, SiDribbble, SiMedium, SiDevdotto, SiReddit,
   SiPinterest, SiThreads, SiBluesky, SiMastodon, SiSubstack, SiPatreon,
   SiKofi, SiBuymeacoffee, SiSnapchat, SiDiscord, SiTelegram, SiWhatsapp,
 } from 'react-icons/si'
+import { FaLinkedinIn } from 'react-icons/fa6'
 import { Globe, Link as LinkIcon } from 'lucide-react'
 import type { IconType } from 'react-icons'
 import type { LucideIcon } from 'lucide-react'
@@ -58,7 +59,7 @@ const SOCIAL_PLATFORMS: Record<string, { icon: IconType | LucideIcon; brandColor
   youtube: { icon: SiYoutube, brandColor: '#FF0000', buildUrl: (h) => `https://youtube.com/@${h}` },
   github: { icon: SiGithub, brandColor: '#181717', buildUrl: (h) => `https://github.com/${h}` },
   gitlab: { icon: SiGitlab, brandColor: '#FC6D26', buildUrl: (h) => `https://gitlab.com/${h}` },
-  linkedin: { icon: SiLinkedin, brandColor: '#0A66C2', buildUrl: (h) => `https://linkedin.com/in/${h}` },
+  linkedin: { icon: FaLinkedinIn, brandColor: '#0A66C2', buildUrl: (h) => `https://linkedin.com/in/${h}` },
   facebook: { icon: SiFacebook, brandColor: '#1877F2', buildUrl: (h) => `https://facebook.com/${h}` },
   twitch: { icon: SiTwitch, brandColor: '#9146FF', buildUrl: (h) => `https://twitch.tv/${h}` },
   dribbble: { icon: SiDribbble, brandColor: '#EA4C89', buildUrl: (h) => `https://dribbble.com/${h}` },
