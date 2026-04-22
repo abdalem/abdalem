@@ -13,13 +13,13 @@ npm run preview # Preview production build
 
 ## Deployment
 
-### Vercel
+### Github-pages
+
+
 
 1. Push to GitHub
-2. Import in Vercel
-3. Deploy (auto-detected)
-
-
+2. Go to Settings → Pages → Source: GitHub Actions
+3. The included workflow will auto-deploy
 
 
 
